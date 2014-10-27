@@ -14,6 +14,8 @@ from datetime import datetime
 
 import os
 
+import errno
+
 from shutil import copy2, copytree, rmtree
 
 import simplejson
@@ -100,6 +102,16 @@ class HarvestedRecord(object):
         self.manifest['versionlog'][version] = []
         self.set_version_date(version, date)
         self.po.add_bytestream_by_path(os.path.join("__"+str(version), "4=%s" % id_encode(self.item_id)), self.item_id)
+        # This creates symlinks with the complete path
+        # To create relative symlinks, chdir to itempath and create symlink between version dir and __latest
+        new_version_path = self.to_dirpath(version=str(version))
+        latest_version_path = self.to_dirpath(version="latest")
+        try:
+            os.symlink(new_version_path, latest_version_path)
+        except OSError, e:
+            if e.errno == errno.EEXIST:
+                os.remove(latest_version_path)
+                os.symlink(new_version_path, latest_version_path)
 
     def _init_manifests_emptydatastructures(self):
         self.item_id = self.manifest['item_id']

@@ -1,3 +1,11 @@
+python-recordsilo (0.4.17) unstable; urgency=low
+
+  * Create symlink __latest pointing to the latest version dir 
+    while setting up version dir
+
+ -- Anusha Ranganathan <anusha.ranganathan@ieee.org>  Mon, 27 Jun 2012 16:12:31 +0000
+
+
 python-recordsilo (0.4.16) unstable; urgency=low
 
   * replaced os.rename with shutil.copytree as Python cannot handle moving 
